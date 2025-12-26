@@ -1,0 +1,36 @@
+name: Build Executables
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+      - run: pip install pillow pyinstaller
+      - run: pyinstaller --onefile --windowed --name MinecraftSkinMerger main.py
+      - uses: actions/upload-artifact@v3
+        with:
+          name: windows-build
+          path: dist/MinecraftSkinMerger.exe
+
+  macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+      - run: pip install pillow pyinstaller
+      - run: pyinstaller --onefile --windowed --name MinecraftSkinMerger main.py
+      - uses: actions/upload-artifact@v3
+        with:
+          name: macos-build
+          path: dist/MinecraftSkinMerger
